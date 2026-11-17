@@ -1,0 +1,168 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SOL RADAR AI</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;padding:20px;background:#080d18;color:#eef4ff;font-family:Arial,sans-serif}
+main{max-width:900px;margin:auto}
+header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px}
+h1{color:#58e0a4}
+.panel{background:#111a2b;border:1px solid #293750;border-radius:14px;padding:20px;margin:18px 0}
+input,select{width:100%;padding:13px;margin:7px 0 14px;background:#091222;color:white;border:1px solid #35445d;border-radius:8px}
+button{padding:13px 20px;background:#58e0a4;color:#07111e;font-weight:bold;border:0;border-radius:8px;cursor:pointer}
+button:disabled{opacity:.5}
+.metrics{display:grid;grid-template-columns:repeat(4,1fr);gap:10px}
+.metric{background:#091222;padding:15px;border-radius:10px;overflow-wrap:anywhere}
+.metric small{color:#9aa9c1}
+.metric strong{display:block;font-size:22px;margin-top:8px}
+.status{color:#9aa9c1;font-size:13px}
+.error{color:#ff8585}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{text-align:left;padding:12px;border-bottom:1px solid #293750;font-size:13px}
+th{color:#9aa9c1}
+a{color:#78aaff}
+.table-wrap{overflow-x:auto}
+.note{color:#9aa9c1;font-size:13px;line-height:1.6}
+@media(max-width:650px){.metrics{grid-template-columns:repeat(2,1fr)}body{padding:12px}}
+</style>
+</head>
+<body>
+<main>
+<header>
+<div>
+<h1>⌁ SOL RADAR AI</h1>
+<p class="status">Solana Wallet Intelligence</p>
+</div>
+<span>● READ-ONLY MODE</span>
+</header>
+
+<section class="panel">
+<h2>Scan any Solana wallet</h2>
+<label>Public wallet address</label>
+<input id="address" placeholder="Paste Solana wallet address">
+<label>Transaction history</label>
+<select id="limit">
+<option value="25">25 transactions</option>
+<option value="50">50 transactions</option>
+<option value="100" selected>100 transactions</option>
+</select>
+<button id="scan">SCAN WALLET →</button>
+<p id="status" class="status">Enter a public wallet address to begin.</p>
+</section>
+
+<section class="metrics">
+<div class="metric"><small>Transactions</small><strong id="count">—</strong></div>
+<div class="metric"><small>Fee collections</small><strong id="collections">—</strong></div>
+<div class="metric"><small>Fee sweeps</small><strong id="sweeps">—</strong></div>
+<div class="metric"><small>Net SOL transfers*</small><strong id="net">—</strong></div>
+</section>
+
+<section class="panel">
+<h2>Wallet activity</h2>
+<div class="table-wrap">
+<table>
+<thead><tr><th>Date</th><th>Activity</th><th>Details</th><th>Transaction</th></tr></thead>
+<tbody id="rows"><tr><td colspan="4">No scan yet.</td></tr></tbody>
+</table>
+</div>
+</section>
+
+<section class="panel">
+<h3>Important</h3>
+<p class="note">
+A creator-fee collection is different from a fee sweep.
+Transfers are not automatically profit. This scanner examines recent
+transactions for one wallet at a time. It does not yet discover every
+wallet on Solana. Always verify important transactions on Solscan.
+</p>
+<p class="note">
+*Net SOL transfers are not a profit calculation. Token trades, fees,
+WSOL and other activity may affect the actual result.
+</p>
+</section>
+</main>
+
+<script>
+const el=id=>document.getElementById(id);
+const short=s=>String(s||"").slice(0,5)+"…";
+const safe=s=>String(s??"").replace(/[&<>"']/g,c=>({
+"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+}[c]));
+
+function activity(tx){
+ const raw=JSON.stringify(tx).toLowerCase();
+ const collect=raw.includes("collect_coin_creator_fee")||
+ raw.includes("collect_creator_fee_v2")||
+ raw.includes("collect_creator_fee");
+ const sweep=raw.includes("sweep_creator_fee");
+ if(collect&&sweep)return "Fee sweep + collection";
+ if(collect)return "Creator-fee collection";
+ if(sweep)return "Creator-fee sweep";
+ return tx.type||tx.source||"Other transaction";
+}
+
+async function scan(){
+ const address=el("address").value.trim();
+ const limit=Number(el("limit").value);
+ if(!address){el("status").textContent="Please enter a wallet address.";return;}
+
+ el("scan").disabled=true;
+ el("status").textContent="Scanning wallet...";
+ el("status").className="status";
+
+ try{
+  const response=await fetch("/api/scan",{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({address,limit})
+  });
+  const result=await response.json();
+  if(!response.ok)throw new Error(result.error||"Scan failed");
+
+  const txs=result.transactions||[];
+  let collections=0,sweeps=0,net=0;
+
+  el("rows").innerHTML=txs.map(tx=>{
+   const kind=activity(tx);
+   const lower=kind.toLowerCase();
+   if(lower.includes("collection"))collections++;
+   if(lower.includes("sweep"))sweeps++;
+
+   for(const t of (tx.nativeTransfers||[])){
+    const amount=(Number(t.amount)||0)/1e9;
+    if(t.toUserAccount===address)net+=amount;
+    if(t.fromUserAccount===address)net-=amount;
+   }
+
+   const sig=tx.signature||"";
+   const timestamp=tx.timestamp?
+    new Date(tx.timestamp*1000).toLocaleString():"—";
+
+   return `<tr>
+   <td>${safe(timestamp)}</td>
+   <td>${safe(kind)}</td>
+   <td>${safe(tx.description||"Transaction activity")}</td>
+   <td>${sig?`<a target="_blank" rel="noopener" href="https://solscan.io/tx/${encodeURIComponent(sig)}">View on Solscan ↗</a>`:"—"}</td>
+   </tr>`;
+  }).join("")||'<tr><td colspan="4">No transactions found.</td></tr>';
+
+  el("count").textContent=txs.length;
+  el("collections").textContent=collections;
+  el("sweeps").textContent=sweeps;
+  el("net").textContent=(net>=0?"+":"")+net.toFixed(5);
+  el("status").textContent="Scan completed successfully.";
+ }catch(error){
+  el("status").textContent=error.message;
+  el("status").className="status error";
+ }finally{
+  el("scan").disabled=false;
+ }
+}
+el("scan").addEventListener("click",scan);
+</script>
+</body>
+</html>
