@@ -8,44 +8,27 @@
 <title>SOL RADAR AI — Command Centre</title>
 
 <style>
-:root {
-  --bg:#080d14;
-  --sidebar:#0c141e;
-  --panel:#101923;
-  --panel2:#14212c;
-  --border:#22313e;
-  --text:#edf5f7;
-  --muted:#8193a2;
-  --teal:#20d6b2;
-  --green:#45d49a;
-  --red:#ff727e;
-  --yellow:#f3bd68;
-  --blue:#75aaff;
+:root{
+  --bg:#080d14;--sidebar:#0c141e;--panel:#101923;--panel2:#14212c;
+  --border:#22313e;--text:#edf5f7;--muted:#8193a2;
+  --teal:#20d6b2;--green:#45d49a;--red:#ff727e;
+  --yellow:#f3bd68;--blue:#75aaff;
 }
 *{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Inter,system-ui,-apple-system,sans-serif
-}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,sans-serif}
 button,input,select{font:inherit}
 .sidebar{
-  position:fixed;inset:0 auto 0 0;width:240px;
-  background:var(--sidebar);border-right:1px solid var(--border);
-  padding:22px 16px;display:flex;flex-direction:column;z-index:5
+  position:fixed;inset:0 auto 0 0;width:240px;background:var(--sidebar);
+  border-right:1px solid var(--border);padding:22px 16px;
+  display:flex;flex-direction:column;z-index:5
 }
 .brand{display:flex;align-items:center;gap:12px;padding:4px 7px 25px;border-bottom:1px solid var(--border)}
-.brand-icon{
-  width:42px;height:42px;border-radius:12px;background:#12352f;
-  display:grid;place-items:center;color:var(--teal);font-size:25px
-}
+.brand-icon{width:42px;height:42px;border-radius:12px;background:#12352f;display:grid;place-items:center;color:var(--teal);font-size:25px}
 .brand-name{font-weight:850;font-size:15px;letter-spacing:.6px}
 .brand-sub{font-size:9px;color:var(--muted);letter-spacing:1.5px;margin-top:4px}
 .nav-label{font-size:10px;color:#607482;letter-spacing:1.5px;font-weight:800;padding:24px 10px 10px}
 .nav{display:grid;gap:5px}
-.nav button{
-  border:0;background:transparent;color:#9aabb8;text-align:left;
-  border-radius:9px;padding:12px;cursor:pointer;font-size:12px
-}
+.nav button{border:0;background:transparent;color:#9aabb8;text-align:left;border-radius:9px;padding:12px;cursor:pointer;font-size:12px}
 .nav button:hover,.nav button.active{background:#142b2b;color:var(--teal)}
 .nav-icon{display:inline-block;width:25px}
 .sidebar-bottom{margin-top:auto}
@@ -66,18 +49,12 @@ h1{font-size:29px;margin:7px 0 5px}
 .panel-title{font-size:14px;font-weight:750}
 .panel-description{font-size:11px;color:var(--muted);margin-top:5px}
 .scanner-grid{display:grid;grid-template-columns:minmax(0,1fr) 110px 135px;gap:10px}
-input,select{
-  width:100%;min-width:0;background:#0b131c;color:var(--text);
-  border:1px solid #2a3b49;border-radius:9px;padding:13px;outline:none;font-size:12px
-}
+input,select{width:100%;min-width:0;background:#0b131c;color:var(--text);border:1px solid #2a3b49;border-radius:9px;padding:13px;outline:none;font-size:12px}
 input:focus,select:focus{border-color:var(--teal)}
-.primary{
-  border:0;border-radius:9px;background:var(--teal);color:#062019;
-  font-weight:850;padding:12px;cursor:pointer;font-size:12px
-}
+.primary{border:0;border-radius:9px;background:var(--teal);color:#062019;font-weight:850;padding:12px;cursor:pointer;font-size:12px}
 .primary:hover{background:#57ebce}
 .primary:disabled{opacity:.55;cursor:wait}
-.scan-hint{color:var(--muted);font-size:10px;margin-top:12px}
+.scan-hint{color:var(--muted);font-size:10px;margin-top:12px;line-height:1.6}
 .message{display:none;margin-top:13px;padding:11px;border-radius:8px;font-size:12px}
 .message.error{display:block;color:#ff9ba3;background:#351b24;border:1px solid #67313d}
 .message.success{display:block;color:#83eacb;background:#102b25;border:1px solid #205344}
@@ -97,18 +74,24 @@ input:focus,select:focus{border-color:var(--teal)}
 .table-wrap{overflow-x:auto}
 table{width:100%;border-collapse:collapse;min-width:650px}
 th{text-align:left;color:#718391;font-size:10px;letter-spacing:.7px;padding:12px 9px;border-bottom:1px solid var(--border)}
-td{font-size:11px;color:#c8d4db;padding:13px 9px;border-bottom:1px solid #1b2934}
+td{font-size:11px;color:#c8d4db;padding:13px 9px;border-bottom:1px solid #1b2934;vertical-align:middle}
 tr:last-child td{border-bottom:0}
 .signature{color:var(--teal);text-decoration:none}
 .signature:hover{text-decoration:underline}
-.pill{display:inline-block;border-radius:20px;padding:5px 8px;font-size:9px;background:#172a2b;color:#7de4ce}
+.pill{display:inline-block;border-radius:20px;padding:5px 8px;font-size:9px;background:#172a2b;color:#7de4ce;white-space:nowrap}
 .pill.failed{color:#ff9ba3;background:#351b24}
+.pill.warning{color:var(--yellow);background:#33291b}
+.pill.neutral{color:#b5c2cc;background:#202c36}
 .empty{text-align:center;padding:30px 12px;color:var(--muted);font-size:12px}
 .footer{text-align:center;color:#60717e;font-size:10px;padding:15px 0}
-@media(max-width:1100px){
-  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
-  .two-columns{grid-template-columns:1fr}
-}
+.wallet-address{font-family:monospace;color:var(--teal)}
+.intel-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.intel-card{background:#0c151e;border:1px solid var(--border);border-radius:11px;padding:14px;min-width:0}
+.intel-label{font-size:9px;color:var(--muted);letter-spacing:.8px;font-weight:800}
+.intel-number{font-size:21px;font-weight:800;margin-top:9px}
+.intel-note{font-size:10px;color:var(--muted);margin-top:5px}
+.section-tag{font-size:9px;color:var(--teal);letter-spacing:1px;font-weight:800}
+@media(max-width:1100px){.metrics{grid-template-columns:repeat(2,minmax(0,1fr))}.two-columns{grid-template-columns:1fr}.intel-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:760px){
   .sidebar{position:static;width:100%;height:auto;padding:12px;border-right:0;border-bottom:1px solid var(--border)}
   .brand{padding:0 3px 10px;border:0}
@@ -122,11 +105,7 @@ tr:last-child td{border-bottom:0}
   .scanner-grid input,.scanner-grid button{grid-column:1/-1}
   .panel{padding:14px}
 }
-@media(max-width:390px){
-  .metrics{gap:8px}
-  .metric{padding:12px}
-  .metric-value{font-size:18px}
-}
+@media(max-width:390px){.metrics{gap:8px}.metric{padding:12px}.metric-value{font-size:18px}.intel-grid{grid-template-columns:1fr}}
 </style>
 </head>
 
@@ -151,6 +130,7 @@ tr:last-child td{border-bottom:0}
 
   <div class="nav-label">INTELLIGENCE</div>
   <nav class="nav">
+    <button data-target="wallet-intelligence">◎ Wallet Intelligence AI</button>
     <button data-target="activity-types">◈ Activity Types</button>
     <button data-target="creator-fees">◇ Creator Fees</button>
   </nav>
@@ -229,6 +209,89 @@ tr:last-child td{border-bottom:0}
     </div>
   </section>
 
+  <section class="panel" id="wallet-intelligence">
+    <div class="panel-heading">
+      <div>
+        <div class="panel-title">◎ Wallet Intelligence AI</div>
+        <div class="panel-description">Automatic investigation of connected wallets discovered from the scanned wallet.</div>
+      </div>
+      <span class="pill" id="investigationStatus">WAITING FOR SCAN</span>
+    </div>
+
+    <div class="intel-grid">
+      <div class="intel-card">
+        <div class="intel-label">CONNECTED WALLETS FOUND</div>
+        <div class="intel-number teal" id="discoveredCount">—</div>
+        <div class="intel-note">From the scanned transaction sample</div>
+      </div>
+      <div class="intel-card">
+        <div class="intel-label">WALLETS INVESTIGATED</div>
+        <div class="intel-number blue" id="analysedCount">—</div>
+        <div class="intel-note">Automatic follow-up scans</div>
+      </div>
+      <div class="intel-card">
+        <div class="intel-label">POSSIBLE SHARED CONNECTIONS</div>
+        <div class="intel-number yellow" id="clusterCount">—</div>
+        <div class="intel-note">Addresses observed across investigated wallets</div>
+      </div>
+    </div>
+
+    <div class="panel-heading">
+      <div>
+        <div class="panel-title">Investigated Wallets</div>
+        <div class="panel-description">Each discovered wallet is scanned independently by the backend.</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>WALLET</th><th>STATUS</th><th>TX SCANNED</th><th>INCOMING SOL</th><th>OUTGOING SOL</th><th>EXPLORER</th></tr>
+        </thead>
+        <tbody id="investigatedRows">
+          <tr><td colspan="6"><div class="empty">Scan a wallet to automatically investigate its connections.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel-heading" style="margin-top:24px">
+      <div>
+        <div class="panel-title">Repeated Wallet Interactions</div>
+        <div class="panel-description">Counterparties that appear repeatedly in an investigated wallet's scanned history.</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>INVESTIGATED WALLET</th><th>REPEATED COUNTERPARTY</th><th>INTERACTIONS</th><th>EXPLORER</th></tr>
+        </thead>
+        <tbody id="repeatedRows">
+          <tr><td colspan="4"><div class="empty">Repeated interactions will appear after investigation.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="panel-heading" style="margin-top:24px">
+      <div>
+        <div class="panel-title">Possible Shared Connections</div>
+        <div class="panel-description">Addresses appearing in the activity of more than one investigated wallet.</div>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>SHARED ADDRESS</th><th>WALLETS CONNECTED</th><th>EXPLORER</th></tr>
+        </thead>
+        <tbody id="clusterRows">
+          <tr><td colspan="3"><div class="empty">No shared-connection analysis yet.</div></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="scan-hint">
+      Important: repeated transfers and shared addresses are investigation clues only. They do not prove common ownership, fraud, scams, or wrongdoing. SOL transfer totals are not profit or PnL.
+    </div>
+  </section>
+
   <section class="panel" id="creator-fees">
     <div class="panel-heading">
       <div><div class="panel-title">◇ Creator Fee Intelligence</div><div class="panel-description">Preliminary instruction-text matching in scanned transactions.</div></div>
@@ -271,270 +334,331 @@ tr:last-child td{border-bottom:0}
 <script>
 const $ = id => document.getElementById(id);
 
-function escapeHTML(value) {
-  return String(value ?? "").replace(/[&<>"']/g, char => ({
+function escapeHTML(value){
+  return String(value ?? "").replace(/[&<>"']/g,char=>({
     "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
   })[char]);
 }
 
-function shortAddress(value) {
-  if (!value) return "Unknown";
-  return value.length > 18 ? value.slice(0,8)+"..."+value.slice(-6) : value;
+function shortAddress(value){
+  if(!value)return "Unknown";
+  value=String(value);
+  return value.length>18?value.slice(0,8)+"..."+value.slice(-6):value;
 }
 
-function formatSOL(value) {
-  const n = Number(value);
-  return (Number.isFinite(n) ? n.toLocaleString(undefined,{maximumFractionDigits:6}) : "0") + " SOL";
+function formatSOL(value){
+  const n=Number(value);
+  return (Number.isFinite(n)?n.toLocaleString(undefined,{maximumFractionDigits:6}):"0")+" SOL";
 }
 
-function setMessage(message,type) {
-  $("message").textContent = message;
-  $("message").className = "message " + type;
+function setMessage(message,type){
+  $("message").textContent=message;
+  $("message").className="message "+type;
 }
 
-function classifyCreator(tx) {
-  const raw = JSON.stringify(tx).toLowerCase();
+function explorerAccount(address){
+  return "https://solscan.io/account/"+encodeURIComponent(address);
+}
+
+function classifyCreator(tx){
+  const raw=JSON.stringify(tx).toLowerCase();
   return {
-    collection: [
-      "collect_coin_creator_fee",
-      "collect_creator_fee_v2",
-      "collect_creator_fee"
-    ].some(x => raw.includes(x)),
-    sweep: raw.includes("sweep_creator_fee")
+    collection:["collect_coin_creator_fee","collect_creator_fee_v2","collect_creator_fee"].some(x=>raw.includes(x)),
+    sweep:raw.includes("sweep_creator_fee")
   };
 }
 
-function calculateTransfers(transactions,wallet) {
-  let incoming = 0, outgoing = 0;
-  for (const tx of transactions) {
-    for (const t of (Array.isArray(tx.nativeTransfers) ? tx.nativeTransfers : [])) {
-      const amount = Number(t.amount || 0) / 1e9;
-      if (t.toUserAccount === wallet) incoming += amount;
-      if (t.fromUserAccount === wallet) outgoing += amount;
+function calculateTransfers(transactions,wallet){
+  let incoming=0,outgoing=0;
+  for(const tx of transactions){
+    for(const t of (Array.isArray(tx.nativeTransfers)?tx.nativeTransfers:[])){
+      const amount=Number(t.amount||0)/1e9;
+      if(t.toUserAccount===wallet)incoming+=amount;
+      if(t.fromUserAccount===wallet)outgoing+=amount;
     }
   }
   return {incoming,outgoing,net:incoming-outgoing};
 }
 
-/* Discover counterparties from native SOL transfers.
-   Interaction totals count observed transfer records, not unique transactions. */
-function discoverConnections(transactions,wallet) {
-  const map = new Map();
+function discoverConnections(transactions,wallet){
+  const map=new Map();
 
-  function getEntry(address) {
-    if (!address || address === wallet) return null;
-    if (!map.has(address)) {
-      map.set(address,{
-        address,
-        sent:0,
-        received:0,
-        sol:0,
-        interactions:0,
-        tokenInteractions:0
-      });
+  function getEntry(address){
+    if(!address||address===wallet)return null;
+    if(!map.has(address)){
+      map.set(address,{address,sent:0,received:0,sol:0,interactions:0,tokenInteractions:0});
     }
     return map.get(address);
   }
 
-  for (const tx of transactions) {
-    for (const t of (Array.isArray(tx.nativeTransfers) ? tx.nativeTransfers : [])) {
-      const amount = Number(t.amount || 0) / 1e9;
-
-      if (t.fromUserAccount === wallet) {
-        const other = getEntry(t.toUserAccount);
-        if (other) {
-          other.sent += amount;
-          other.sol += amount;
-          other.interactions++;
-        }
+  for(const tx of transactions){
+    for(const t of (Array.isArray(tx.nativeTransfers)?tx.nativeTransfers:[])){
+      const amount=Number(t.amount||0)/1e9;
+      if(t.fromUserAccount===wallet){
+        const other=getEntry(t.toUserAccount);
+        if(other){other.sent+=amount;other.sol+=amount;other.interactions++;}
       }
-
-      if (t.toUserAccount === wallet) {
-        const other = getEntry(t.fromUserAccount);
-        if (other) {
-          other.received += amount;
-          other.sol += amount;
-          other.interactions++;
-        }
+      if(t.toUserAccount===wallet){
+        const other=getEntry(t.fromUserAccount);
+        if(other){other.received+=amount;other.sol+=amount;other.interactions++;}
       }
     }
 
-    for (const t of (Array.isArray(tx.tokenTransfers) ? tx.tokenTransfers : [])) {
-      if (t.fromUserAccount === wallet) {
-        const other = getEntry(t.toUserAccount);
-        if (other) {
-          other.tokenInteractions++;
-          other.interactions++;
-        }
+    for(const t of (Array.isArray(tx.tokenTransfers)?tx.tokenTransfers:[])){
+      if(t.fromUserAccount===wallet){
+        const other=getEntry(t.toUserAccount);
+        if(other){other.tokenInteractions++;other.interactions++;}
       }
-      if (t.toUserAccount === wallet) {
-        const other = getEntry(t.fromUserAccount);
-        if (other) {
-          other.tokenInteractions++;
-          other.interactions++;
-        }
+      if(t.toUserAccount===wallet){
+        const other=getEntry(t.fromUserAccount);
+        if(other){other.tokenInteractions++;other.interactions++;}
       }
     }
   }
 
-  return [...map.values()].sort((a,b) =>
-    b.interactions - a.interactions || b.sol - a.sol
-  );
+  return [...map.values()].sort((a,b)=>b.interactions-a.interactions||b.sol-a.sol);
 }
 
-function renderConnections(connections) {
-  $("connectionCount").textContent = connections.length + " WALLETS";
+function renderConnections(connections){
+  $("connectionCount").textContent=connections.length+" WALLETS";
 
-  if (!connections.length) {
-    $("connectionRows").innerHTML =
-      '<tr><td colspan="5"><div class="empty">No other wallet addresses were found in the returned transfer records.</div></td></tr>';
+  if(!connections.length){
+    $("connectionRows").innerHTML='<tr><td colspan="5"><div class="empty">No other wallet addresses were found in the returned transfer records.</div></td></tr>';
     return;
   }
 
-  $("connectionRows").innerHTML = connections.slice(0,100).map(c => {
-    const role = c.sent > 0 && c.received > 0
-      ? "Both directions"
-      : c.sent > 0 ? "Sent to wallet" : "Received from wallet";
-
-    const link = "https://solscan.io/account/" + encodeURIComponent(c.address);
-
+  $("connectionRows").innerHTML=connections.slice(0,100).map(c=>{
+    const role=c.sent>0&&c.received>0?"Both directions":c.sent>0?"Sent to wallet":"Received from wallet";
+    const link=explorerAccount(c.address);
     return `<tr>
-      <td title="${escapeHTML(c.address)}">${escapeHTML(shortAddress(c.address))}</td>
+      <td title="${escapeHTML(c.address)}"><span class="wallet-address">${escapeHTML(shortAddress(c.address))}</span></td>
       <td>${escapeHTML(role)}</td>
-      <td>${c.interactions}</td>
+      <td>${Number(c.interactions)||0}</td>
       <td>${formatSOL(c.sol)}</td>
       <td><a class="signature" href="${link}" target="_blank" rel="noopener noreferrer">View ↗</a></td>
     </tr>`;
   }).join("");
 }
 
-function renderBreakdown(types) {
-  const entries = Object.entries(types || {}).sort((a,b)=>b[1]-a[1]).slice(0,10);
-  $("activityBreakdown").innerHTML = entries.length
-    ? entries.map(([name,count]) => `<div class="activity-row"><span class="activity-name">${escapeHTML(name)}</span><strong class="activity-count">${Number(count)}</strong></div>`).join("")
-    : '<div class="empty">No activity types were returned.</div>';
+function renderBreakdown(types){
+  const entries=Object.entries(types||{}).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  $("activityBreakdown").innerHTML=entries.length
+    ?entries.map(([name,count])=>`<div class="activity-row"><span class="activity-name">${escapeHTML(name)}</span><strong class="activity-count">${Number(count)}</strong></div>`).join("")
+    :'<div class="empty">No activity types were returned.</div>';
 }
 
-function renderTransactions(transactions) {
-  $("tableCount").textContent = transactions.length + " RESULTS";
+function renderTransactions(transactions){
+  $("tableCount").textContent=transactions.length+" RESULTS";
 
-  if (!transactions.length) {
-    $("transactionRows").innerHTML = '<tr><td colspan="5"><div class="empty">No transactions found.</div></td></tr>';
+  if(!transactions.length){
+    $("transactionRows").innerHTML='<tr><td colspan="5"><div class="empty">No transactions found.</div></td></tr>';
     return;
   }
 
-  $("transactionRows").innerHTML = transactions.map(tx => {
-    const sig = String(tx.signature || "");
-    const date = tx.timestamp
-      ? new Date(Number(tx.timestamp)*1000).toLocaleString()
-      : "Unknown date";
-    const failed = Boolean(tx.transactionError);
-    const link = "https://solscan.io/tx/" + encodeURIComponent(sig);
-
+  $("transactionRows").innerHTML=transactions.map(tx=>{
+    const sig=String(tx.signature||"");
+    const date=tx.timestamp?new Date(Number(tx.timestamp)*1000).toLocaleString():"Unknown date";
+    const failed=Boolean(tx.transactionError);
+    const link="https://solscan.io/tx/"+encodeURIComponent(sig);
     return `<tr>
       <td title="${escapeHTML(sig)}">${escapeHTML(shortAddress(sig))}</td>
-      <td>${escapeHTML(tx.type || "UNKNOWN")}</td>
+      <td>${escapeHTML(tx.type||"UNKNOWN")}</td>
       <td>${escapeHTML(date)}</td>
       <td><span class="pill ${failed?"failed":""}">${failed?"Failed":"Success"}</span></td>
-      <td>${sig ? `<a class="signature" href="${link}" target="_blank" rel="noopener noreferrer">View ↗</a>` : "—"}</td>
+      <td>${sig?`<a class="signature" href="${link}" target="_blank" rel="noopener noreferrer">View ↗</a>`:"—"}</td>
     </tr>`;
   }).join("");
 }
 
-function updateDashboard(result,wallet) {
-  const txs = result.transactions;
-  const intelligence = result.intelligence || {};
-  const flows = calculateTransfers(txs,wallet);
+function getWalletIntelligence(wallet){
+  return wallet?.intelligence||wallet?.analysis||{};
+}
 
-  const incoming = Number.isFinite(Number(intelligence.incomingSOL)) ? Number(intelligence.incomingSOL) : flows.incoming;
-  const outgoing = Number.isFinite(Number(intelligence.outgoingSOL)) ? Number(intelligence.outgoingSOL) : flows.outgoing;
-  const net = incoming - outgoing;
+function renderWalletInvestigation(investigation){
+  const data=investigation||{};
+  const wallets=Array.isArray(data.connectedWallets)?data.connectedWallets:[];
+  const clusters=Array.isArray(data.possibleClusters)?data.possibleClusters:[];
 
-  const tokens = Number.isFinite(Number(intelligence.tokenTransactions))
-    ? Number(intelligence.tokenTransactions)
-    : txs.filter(tx=>Array.isArray(tx.tokenTransfers)&&tx.tokenTransfers.length).length;
+  $("discoveredCount").textContent=Number(data.walletsDiscovered??wallets.length).toLocaleString();
+  $("analysedCount").textContent=Number(data.walletsAnalysed??wallets.filter(w=>w.status==="analysed"||w.status==="success").length).toLocaleString();
+  $("clusterCount").textContent=clusters.length.toLocaleString();
 
-  const failed = Number.isFinite(Number(intelligence.failedTransactions))
-    ? Number(intelligence.failedTransactions)
-    : txs.filter(tx=>Boolean(tx.transactionError)).length;
+  const status=data.enabled===false?"NOT ENABLED":wallets.length?"INVESTIGATION COMPLETE":"NO CONNECTIONS";
+  $("investigationStatus").textContent=status;
 
-  let collections = 0, sweeps = 0;
-  const types = {};
+  if(!wallets.length){
+    $("investigatedRows").innerHTML='<tr><td colspan="6"><div class="empty">No connected wallets were returned by the backend.</div></td></tr>';
+    $("repeatedRows").innerHTML='<tr><td colspan="4"><div class="empty">No repeated interactions returned.</div></td></tr>';
+  }else{
+    $("investigatedRows").innerHTML=wallets.map(w=>{
+      const address=w.address||w.wallet||"";
+      const intelligence=getWalletIntelligence(w);
+      const statusText=String(w.status||"unknown").toLowerCase();
+      const ok=statusText==="analysed"||statusText==="success"||statusText==="completed";
+      const txCount=Number(intelligence.transactionsScanned??w.transactionsScanned??w.transactionCount??0);
+      const incoming=Number(intelligence.incomingSOL??w.incomingSOL??0);
+      const outgoing=Number(intelligence.outgoingSOL??w.outgoingSOL??0);
+      return `<tr>
+        <td title="${escapeHTML(address)}"><span class="wallet-address">${escapeHTML(shortAddress(address))}</span></td>
+        <td><span class="pill ${ok?"":"warning"}">${escapeHTML(w.status||"Unknown")}</span></td>
+        <td>${txCount.toLocaleString()}</td>
+        <td>${formatSOL(incoming)}</td>
+        <td>${formatSOL(outgoing)}</td>
+        <td>${address?`<a class="signature" href="${explorerAccount(address)}" target="_blank" rel="noopener noreferrer">View ↗</a>`:"—"}</td>
+      </tr>`;
+    }).join("");
 
-  for (const tx of txs) {
-    const c = classifyCreator(tx);
-    if (c.collection) collections++;
-    if (c.sweep) sweeps++;
-    const type = tx.type || "UNKNOWN";
-    types[type] = (types[type] || 0) + 1;
+    const repeated=[];
+    for(const w of wallets){
+      const intelligence=getWalletIntelligence(w);
+      const entries=Array.isArray(intelligence.repeatedCounterparties)
+        ?intelligence.repeatedCounterparties
+        :Array.isArray(w.repeatedCounterparties)?w.repeatedCounterparties:[];
+      for(const item of entries){
+        const address=item.address||item.wallet||item.counterparty||"";
+        repeated.push({
+          source:w.address||w.wallet||"Unknown",
+          address,
+          interactions:Number(item.interactions??item.count??item.transactionCount??0)
+        });
+      }
+    }
+
+    $("repeatedRows").innerHTML=repeated.length
+      ?repeated.slice(0,50).map(r=>`<tr>
+          <td title="${escapeHTML(r.source)}">${escapeHTML(shortAddress(r.source))}</td>
+          <td title="${escapeHTML(r.address)}"><span class="wallet-address">${escapeHTML(shortAddress(r.address))}</span></td>
+          <td>${r.interactions||"—"}</td>
+          <td>${r.address?`<a class="signature" href="${explorerAccount(r.address)}" target="_blank" rel="noopener noreferrer">View ↗</a>`:"—"}</td>
+        </tr>`).join("")
+      :'<tr><td colspan="4"><div class="empty">No repeated counterparties were returned for these wallets.</div></td></tr>';
   }
 
-  $("totalTransactions").textContent = txs.length.toLocaleString();
-  $("incomingSOL").textContent = formatSOL(incoming);
-  $("outgoingSOL").textContent = formatSOL(outgoing);
-  $("netSOL").textContent = formatSOL(net);
-  $("netSOL").className = "metric-value " + (net>=0?"teal":"red");
-  $("tokenTransactions").textContent = tokens.toLocaleString();
-  $("failedTransactions").textContent = failed.toLocaleString();
-  $("creatorCollections").textContent = collections;
-  $("creatorSweeps").textContent = sweeps;
+  if(!clusters.length){
+    $("clusterRows").innerHTML='<tr><td colspan="3"><div class="empty">No possible shared connections were identified in this scan.</div></td></tr>';
+  }else{
+    $("clusterRows").innerHTML=clusters.map(c=>{
+      const address=c.address||c.sharedAddress||c.counterparty||"";
+      const connected=c.wallets||c.connectedWallets||c.walletAddresses||[];
+      const count=Array.isArray(connected)?connected.length:Number(c.walletCount??c.count??0);
+      return `<tr>
+        <td title="${escapeHTML(address)}"><span class="wallet-address">${escapeHTML(shortAddress(address))}</span></td>
+        <td>${count||"—"}</td>
+        <td>${address?`<a class="signature" href="${explorerAccount(address)}" target="_blank" rel="noopener noreferrer">View ↗</a>`:"—"}</td>
+      </tr>`;
+    }).join("");
+  }
+}
 
-  $("flowIncoming").textContent = formatSOL(incoming);
-  $("flowOutgoing").textContent = formatSOL(outgoing);
-  $("flowNet").textContent = formatSOL(net);
-  $("feeCollectionDetail").textContent = collections;
-  $("feeSweepDetail").textContent = sweeps;
+function updateDashboard(result,wallet){
+  const txs=Array.isArray(result.transactions)?result.transactions:[];
+  const intelligence=result.intelligence||{};
+  const flows=calculateTransfers(txs,wallet);
 
-  renderBreakdown(intelligence.activityTypes || types);
+  const incoming=Number.isFinite(Number(intelligence.incomingSOL))?Number(intelligence.incomingSOL):flows.incoming;
+  const outgoing=Number.isFinite(Number(intelligence.outgoingSOL))?Number(intelligence.outgoingSOL):flows.outgoing;
+  const net=incoming-outgoing;
+
+  const tokens=Number.isFinite(Number(intelligence.tokenTransactions))
+    ?Number(intelligence.tokenTransactions)
+    :txs.filter(tx=>Array.isArray(tx.tokenTransfers)&&tx.tokenTransfers.length).length;
+
+  const failed=Number.isFinite(Number(intelligence.failedTransactions))
+    ?Number(intelligence.failedTransactions)
+    :txs.filter(tx=>Boolean(tx.transactionError)).length;
+
+  let collections=0,sweeps=0;
+  const types={};
+
+  for(const tx of txs){
+    const c=classifyCreator(tx);
+    if(c.collection)collections++;
+    if(c.sweep)sweeps++;
+    const type=tx.type||"UNKNOWN";
+    types[type]=(types[type]||0)+1;
+  }
+
+  $("totalTransactions").textContent=txs.length.toLocaleString();
+  $("incomingSOL").textContent=formatSOL(incoming);
+  $("outgoingSOL").textContent=formatSOL(outgoing);
+  $("netSOL").textContent=formatSOL(net);
+  $("netSOL").className="metric-value "+(net>=0?"teal":"red");
+  $("tokenTransactions").textContent=tokens.toLocaleString();
+  $("failedTransactions").textContent=failed.toLocaleString();
+  $("creatorCollections").textContent=collections;
+  $("creatorSweeps").textContent=sweeps;
+
+  $("flowIncoming").textContent=formatSOL(incoming);
+  $("flowOutgoing").textContent=formatSOL(outgoing);
+  $("flowNet").textContent=formatSOL(net);
+  $("feeCollectionDetail").textContent=collections;
+  $("feeSweepDetail").textContent=sweeps;
+
+  renderBreakdown(intelligence.activityTypes||types);
   renderTransactions(txs);
   renderConnections(discoverConnections(txs,wallet));
+  renderWalletInvestigation(result.walletInvestigation);
 
-  $("walletLabel").textContent = wallet;
-  $("walletInfo").style.display = "block";
+  $("walletLabel").textContent=wallet;
+  $("walletInfo").style.display="block";
 }
 
 $("scanForm").addEventListener("submit",async event=>{
   event.preventDefault();
 
-  const wallet = $("walletAddress").value.trim();
-  const limit = Number($("limit").value);
-  const button = $("scanButton");
+  const wallet=$("walletAddress").value.trim();
+  const limit=Number($("limit").value);
+  const button=$("scanButton");
 
-  if (!wallet) {
+  if(!wallet){
     setMessage("Enter a public Solana wallet address.","error");
     return;
   }
 
-  button.disabled = true;
-  button.textContent = "SCANNING...";
-  $("message").className = "message";
-  $("walletInfo").style.display = "none";
+  button.disabled=true;
+  button.textContent="SCANNING...";
+  $("message").className="message";
+  $("walletInfo").style.display="none";
 
-  $("transactionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Scanning wallet...</div></td></tr>';
-  $("connectionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Discovering wallet connections...</div></td></tr>';
+  $("transactionRows").innerHTML='<tr><td colspan="5"><div class="empty">Scanning wallet...</div></td></tr>';
+  $("connectionRows").innerHTML='<tr><td colspan="5"><div class="empty">Discovering wallet connections...</div></td></tr>';
+  $("investigatedRows").innerHTML='<tr><td colspan="6"><div class="empty">Automatically investigating connected wallets...</div></td></tr>';
+  $("repeatedRows").innerHTML='<tr><td colspan="4"><div class="empty">Checking repeated interactions...</div></td></tr>';
+  $("clusterRows").innerHTML='<tr><td colspan="3"><div class="empty">Checking shared connections...</div></td></tr>';
+  $("investigationStatus").textContent="INVESTIGATING...";
 
-  try {
-    const response = await fetch("/api/scan",{
+  try{
+    const response=await fetch("/api/scan",{
       method:"POST",
       headers:{"Content-Type":"application/json"},
       body:JSON.stringify({address:wallet,limit})
     });
 
-    const result = await response.json().catch(()=>({}));
+    const result=await response.json().catch(()=>({}));
 
-    if (!response.ok) throw new Error(result.error || "Wallet scan failed.");
-    if (!Array.isArray(result.transactions)) throw new Error("Unexpected response from Helius.");
+    if(!response.ok)throw new Error(result.error||"Wallet scan failed.");
+    if(!Array.isArray(result.transactions))throw new Error("Unexpected response from Helius.");
 
     updateDashboard(result,wallet);
-    setMessage("Scan completed. "+result.transactions.length+" transactions received.","success");
 
-  } catch(error) {
-    setMessage(error.message || "Unable to scan wallet.","error");
-    $("transactionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Scan failed. Check the error above.</div></td></tr>';
-    $("connectionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Connections unavailable until a successful scan.</div></td></tr>';
-  } finally {
-    button.disabled = false;
-    button.textContent = "⌕ SCAN WALLET";
+    const investigated=Number(result.walletInvestigation?.walletsAnalysed||0);
+    setMessage(
+      "Scan completed. "+result.transactions.length+
+      " main-wallet transactions received. "+investigated+
+      " connected wallets investigated.",
+      "success"
+    );
+  }catch(error){
+    setMessage(error.message||"Unable to scan wallet.","error");
+    $("transactionRows").innerHTML='<tr><td colspan="5"><div class="empty">Scan failed. Check the error above.</div></td></tr>';
+    $("connectionRows").innerHTML='<tr><td colspan="5"><div class="empty">Connections unavailable until a successful scan.</div></td></tr>';
+    $("investigatedRows").innerHTML='<tr><td colspan="6"><div class="empty">Investigation unavailable until a successful scan.</div></td></tr>';
+    $("repeatedRows").innerHTML='<tr><td colspan="4"><div class="empty">Investigation unavailable.</div></td></tr>';
+    $("clusterRows").innerHTML='<tr><td colspan="3"><div class="empty">Investigation unavailable.</div></td></tr>';
+    $("investigationStatus").textContent="SCAN FAILED";
+  }finally{
+    button.disabled=false;
+    button.textContent="⌕ SCAN WALLET";
   }
 });
 
