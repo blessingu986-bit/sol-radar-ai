@@ -2,871 +2,551 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080d14">
-  <title>SOL RADAR AI | Wallet Intelligence</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#080d14">
+<title>SOL RADAR AI — Command Centre</title>
 
-  <style>
-    :root {
-      --bg: #080d14;
-      --panel: #101923;
-      --panel2: #131f2b;
-      --border: #22313e;
-      --text: #edf5f7;
-      --muted: #8193a2;
-      --teal: #20d6b2;
-      --teal-dark: #0b9e85;
-      --green: #45d49a;
-      --red: #ff727e;
-      --yellow: #f3bd68;
-      --blue: #75aaff;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, sans-serif;
-    }
-
-    button, input, select { font: inherit; }
-
-    .app { min-height: 100vh; }
-
-    .sidebar {
-      position: fixed;
-      inset: 0 auto 0 0;
-      width: 245px;
-      background: #0c141e;
-      border-right: 1px solid var(--border);
-      padding: 25px 17px;
-      display: flex;
-      flex-direction: column;
-      z-index: 10;
-    }
-
-    .brand {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      padding: 0 8px 28px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    .brand-icon {
-      width: 42px;
-      height: 42px;
-      display: grid;
-      place-items: center;
-      border-radius: 13px;
-      background: #12352f;
-      color: var(--teal);
-      font-size: 23px;
-    }
-
-    .brand-name { font-size: 15px; font-weight: 800; letter-spacing: .7px; }
-    .brand-sub { color: var(--muted); font-size: 9px; letter-spacing: 1.7px; margin-top: 4px; }
-
-    .nav-label {
-      color: #607482;
-      font-size: 10px;
-      font-weight: 800;
-      letter-spacing: 1.5px;
-      padding: 25px 11px 10px;
-    }
-
-    .nav {
-      display: grid;
-      gap: 6px;
-    }
-
-    .nav button {
-      border: 0;
-      color: #9aabb8;
-      background: transparent;
-      text-align: left;
-      border-radius: 9px;
-      padding: 12px;
-      cursor: pointer;
-      font-size: 13px;
-      transition: .2s;
-    }
-
-    .nav button:hover, .nav button.active {
-      background: #142b2b;
-      color: var(--teal);
-    }
-
-    .nav-icon { display: inline-block; width: 25px; }
-
-    .sidebar-bottom { margin-top: auto; }
-
-    .status-card {
-      background: #10251f;
-      border: 1px solid #1c493c;
-      border-radius: 12px;
-      padding: 13px;
-    }
-
-    .status-line { display: flex; align-items: center; gap: 8px; font-size: 12px; }
-    .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green); box-shadow: 0 0 10px #45d49a88; }
-    .status-note { color: #87a99e; font-size: 10px; margin-top: 8px; }
-
-    .main {
-      margin-left: 245px;
-      padding: 30px;
-      max-width: 1800px;
-    }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 15px;
-      margin-bottom: 28px;
-    }
-
-    .eyebrow { color: var(--teal); font-size: 10px; font-weight: 800; letter-spacing: 2px; }
-    h1 { font-size: clamp(23px, 3vw, 30px); margin: 7px 0 5px; letter-spacing: -.8px; }
-    .subtitle { color: var(--muted); font-size: 12px; }
-
-    .network {
-      border: 1px solid #245044;
-      color: var(--teal);
-      background: #10251f;
-      padding: 9px 13px;
-      border-radius: 30px;
-      font-size: 11px;
-      white-space: nowrap;
-    }
-
-    .network span { display: inline-block; width: 7px; height: 7px; background: var(--green); border-radius: 50%; margin-right: 7px; }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 15px;
-      padding: 20px;
-      margin-bottom: 19px;
-    }
-
-    .panel-heading {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 12px;
-      margin-bottom: 17px;
-    }
-
-    .panel-title { font-size: 14px; font-weight: 750; }
-    .panel-description { color: var(--muted); font-size: 11px; margin-top: 5px; }
-
-    .scanner-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1fr) 110px 130px;
-      gap: 10px;
-    }
-
-    input, select {
-      width: 100%;
-      min-width: 0;
-      border: 1px solid #2a3b49;
-      background: #0b131c;
-      color: var(--text);
-      border-radius: 9px;
-      padding: 13px;
-      outline: none;
-      font-size: 12px;
-    }
-
-    input:focus, select:focus { border-color: var(--teal); }
-
-    .primary {
-      border: 0;
-      border-radius: 9px;
-      background: var(--teal);
-      color: #062019;
-      font-weight: 850;
-      cursor: pointer;
-      padding: 12px 17px;
-      font-size: 12px;
-      transition: .2s;
-    }
-
-    .primary:hover { background: #57ebce; transform: translateY(-1px); }
-    .primary:disabled { opacity: .55; cursor: wait; transform: none; }
-
-    .scan-hint { color: var(--muted); font-size: 10px; margin-top: 12px; }
-    .message { display: none; margin-top: 13px; padding: 11px; border-radius: 8px; font-size: 12px; }
-    .message.error { display: block; color: #ff9ba3; background: #351b24; border: 1px solid #67313d; }
-    .message.success { display: block; color: #83eacb; background: #102b25; border: 1px solid #205344; }
-
-    .wallet-info {
-      display: none;
-      align-items: center;
-      gap: 9px;
-      margin-top: 14px;
-      color: var(--muted);
-      font-size: 11px;
-      overflow-wrap: anywhere;
-    }
-
-    .wallet-info strong { color: var(--teal); font-weight: 600; }
-
-    .metrics {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 13px;
-      margin-bottom: 19px;
-    }
-
-    .metric {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 17px;
-      min-width: 0;
-    }
-
-    .metric-label { color: var(--muted); font-size: 10px; font-weight: 750; letter-spacing: .7px; }
-    .metric-value { font-size: clamp(19px, 2.5vw, 25px); font-weight: 800; margin-top: 13px; overflow-wrap: anywhere; }
-    .metric-foot { color: #718391; font-size: 10px; margin-top: 7px; }
-    .teal { color: var(--teal); }
-    .red { color: var(--red); }
-    .yellow { color: var(--yellow); }
-    .blue { color: var(--blue); }
-
-    .two-columns {
-      display: grid;
-      grid-template-columns: 1.25fr .75fr;
-      gap: 18px;
-    }
-
-    .activity-list { display: grid; gap: 0; }
-    .activity-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      border-bottom: 1px solid #1e2b36;
-      padding: 12px 0;
-      font-size: 12px;
-    }
-
-    .activity-row:last-child { border-bottom: 0; }
-    .activity-name { color: #cbd7de; }
-    .activity-count { color: var(--teal); font-weight: 750; }
-
-    .table-wrap { overflow-x: auto; }
-    table { width: 100%; border-collapse: collapse; min-width: 680px; }
-    th {
-      color: #718391;
-      font-size: 10px;
-      letter-spacing: .8px;
-      text-align: left;
-      padding: 12px 10px;
-      border-bottom: 1px solid var(--border);
-    }
-
-    td {
-      font-size: 11px;
-      color: #c8d4db;
-      padding: 14px 10px;
-      border-bottom: 1px solid #1b2934;
-    }
-
-    tr:last-child td { border-bottom: 0; }
-    .signature { color: var(--teal); text-decoration: none; }
-    .signature:hover { text-decoration: underline; }
-    .pill {
-      display: inline-block;
-      border-radius: 20px;
-      padding: 5px 8px;
-      font-size: 9px;
-      background: #172a2b;
-      color: #7de4ce;
-    }
-    .pill.failed { color: #ff9ba3; background: #351b24; }
-
-    .empty {
-      text-align: center;
-      padding: 34px 15px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    .empty-icon { font-size: 25px; margin-bottom: 9px; }
-
-    .footer {
-      text-align: center;
-      color: #60717e;
-      font-size: 10px;
-      padding: 15px 0 5px;
-    }
-
-    .section { scroll-margin-top: 20px; }
-
-    @media (max-width: 1100px) {
-      .metrics { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .two-columns { grid-template-columns: 1fr; }
-    }
-
-    @media (max-width: 760px) {
-      .sidebar {
-        position: static;
-        width: 100%;
-        height: auto;
-        padding: 13px 15px;
-        border-right: 0;
-        border-bottom: 1px solid var(--border);
-      }
-
-      .brand { padding: 0 3px 12px; border-bottom: 0; }
-      .nav-label, .sidebar-bottom { display: none; }
-      .nav { display: flex; overflow-x: auto; padding-top: 8px; }
-      .nav button { white-space: nowrap; padding: 9px 11px; font-size: 11px; }
-      .nav-icon { width: 19px; }
-      .main { margin-left: 0; padding: 20px 14px; }
-      .topbar { align-items: flex-start; }
-      .network { font-size: 9px; padding: 8px; }
-      .scanner-grid { grid-template-columns: 1fr 90px; }
-      .scanner-grid input { grid-column: 1 / -1; }
-      .scanner-grid button { grid-column: 1 / -1; }
-      .panel { padding: 15px; }
-      .metric { padding: 14px; }
-    }
-
-    @media (max-width: 390px) {
-      .metrics { grid-template-columns: 1fr 1fr; gap: 8px; }
-      .metric-value { font-size: 18px; }
-      .subtitle { font-size: 10px; }
-    }
-  </style>
+<style>
+:root {
+  --bg:#080d14;
+  --sidebar:#0c141e;
+  --panel:#101923;
+  --panel2:#14212c;
+  --border:#22313e;
+  --text:#edf5f7;
+  --muted:#8193a2;
+  --teal:#20d6b2;
+  --green:#45d49a;
+  --red:#ff727e;
+  --yellow:#f3bd68;
+  --blue:#75aaff;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Inter,system-ui,-apple-system,sans-serif
+}
+button,input,select{font:inherit}
+.sidebar{
+  position:fixed;inset:0 auto 0 0;width:240px;
+  background:var(--sidebar);border-right:1px solid var(--border);
+  padding:22px 16px;display:flex;flex-direction:column;z-index:5
+}
+.brand{display:flex;align-items:center;gap:12px;padding:4px 7px 25px;border-bottom:1px solid var(--border)}
+.brand-icon{
+  width:42px;height:42px;border-radius:12px;background:#12352f;
+  display:grid;place-items:center;color:var(--teal);font-size:25px
+}
+.brand-name{font-weight:850;font-size:15px;letter-spacing:.6px}
+.brand-sub{font-size:9px;color:var(--muted);letter-spacing:1.5px;margin-top:4px}
+.nav-label{font-size:10px;color:#607482;letter-spacing:1.5px;font-weight:800;padding:24px 10px 10px}
+.nav{display:grid;gap:5px}
+.nav button{
+  border:0;background:transparent;color:#9aabb8;text-align:left;
+  border-radius:9px;padding:12px;cursor:pointer;font-size:12px
+}
+.nav button:hover,.nav button.active{background:#142b2b;color:var(--teal)}
+.nav-icon{display:inline-block;width:25px}
+.sidebar-bottom{margin-top:auto}
+.status-card{background:#10251f;border:1px solid #1c493c;border-radius:12px;padding:13px}
+.status-line{font-size:12px;display:flex;align-items:center;gap:8px}
+.dot{width:8px;height:8px;border-radius:50%;background:var(--green)}
+.status-note{font-size:10px;color:#87a99e;margin-top:8px}
+.main{margin-left:240px;padding:30px;max-width:1800px}
+.topbar{display:flex;justify-content:space-between;align-items:center;gap:15px;margin-bottom:25px}
+.eyebrow{font-size:10px;color:var(--teal);letter-spacing:2px;font-weight:800}
+h1{font-size:29px;margin:7px 0 5px}
+.subtitle{font-size:12px;color:var(--muted)}
+.network{background:#10251f;border:1px solid #245044;color:var(--teal);padding:9px 13px;border-radius:30px;font-size:11px}
+.network span{display:inline-block;width:7px;height:7px;border-radius:50%;background:var(--green);margin-right:7px}
+.panel,.metric{background:var(--panel);border:1px solid var(--border);border-radius:14px}
+.panel{padding:19px;margin-bottom:18px;scroll-margin-top:20px}
+.panel-heading{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.panel-title{font-size:14px;font-weight:750}
+.panel-description{font-size:11px;color:var(--muted);margin-top:5px}
+.scanner-grid{display:grid;grid-template-columns:minmax(0,1fr) 110px 135px;gap:10px}
+input,select{
+  width:100%;min-width:0;background:#0b131c;color:var(--text);
+  border:1px solid #2a3b49;border-radius:9px;padding:13px;outline:none;font-size:12px
+}
+input:focus,select:focus{border-color:var(--teal)}
+.primary{
+  border:0;border-radius:9px;background:var(--teal);color:#062019;
+  font-weight:850;padding:12px;cursor:pointer;font-size:12px
+}
+.primary:hover{background:#57ebce}
+.primary:disabled{opacity:.55;cursor:wait}
+.scan-hint{color:var(--muted);font-size:10px;margin-top:12px}
+.message{display:none;margin-top:13px;padding:11px;border-radius:8px;font-size:12px}
+.message.error{display:block;color:#ff9ba3;background:#351b24;border:1px solid #67313d}
+.message.success{display:block;color:#83eacb;background:#102b25;border:1px solid #205344}
+.wallet-info{display:none;margin-top:13px;color:var(--muted);font-size:11px;overflow-wrap:anywhere}
+.wallet-info strong{color:var(--teal);font-weight:600}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:18px}
+.metric{padding:16px;min-width:0}
+.metric-label{font-size:10px;color:var(--muted);font-weight:750;letter-spacing:.6px}
+.metric-value{font-size:23px;font-weight:800;margin-top:12px;overflow-wrap:anywhere}
+.metric-foot{font-size:10px;color:#718391;margin-top:7px}
+.teal{color:var(--teal)}.red{color:var(--red)}.yellow{color:var(--yellow)}.blue{color:var(--blue)}
+.two-columns{display:grid;grid-template-columns:1fr 1fr;gap:17px}
+.activity-row{display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid #1e2b36;font-size:12px}
+.activity-row:last-child{border-bottom:0}
+.activity-name{color:#cbd7de}
+.activity-count{color:var(--teal);font-weight:750}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th{text-align:left;color:#718391;font-size:10px;letter-spacing:.7px;padding:12px 9px;border-bottom:1px solid var(--border)}
+td{font-size:11px;color:#c8d4db;padding:13px 9px;border-bottom:1px solid #1b2934}
+tr:last-child td{border-bottom:0}
+.signature{color:var(--teal);text-decoration:none}
+.signature:hover{text-decoration:underline}
+.pill{display:inline-block;border-radius:20px;padding:5px 8px;font-size:9px;background:#172a2b;color:#7de4ce}
+.pill.failed{color:#ff9ba3;background:#351b24}
+.empty{text-align:center;padding:30px 12px;color:var(--muted);font-size:12px}
+.footer{text-align:center;color:#60717e;font-size:10px;padding:15px 0}
+@media(max-width:1100px){
+  .metrics{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .two-columns{grid-template-columns:1fr}
+}
+@media(max-width:760px){
+  .sidebar{position:static;width:100%;height:auto;padding:12px;border-right:0;border-bottom:1px solid var(--border)}
+  .brand{padding:0 3px 10px;border:0}
+  .nav-label,.sidebar-bottom{display:none}
+  .nav{display:flex;overflow-x:auto;padding-top:8px}
+  .nav button{white-space:nowrap;padding:9px;font-size:11px}
+  .main{margin-left:0;padding:19px 13px}
+  .topbar{align-items:flex-start}
+  .network{font-size:9px;padding:8px}
+  .scanner-grid{grid-template-columns:1fr 90px}
+  .scanner-grid input,.scanner-grid button{grid-column:1/-1}
+  .panel{padding:14px}
+}
+@media(max-width:390px){
+  .metrics{gap:8px}
+  .metric{padding:12px}
+  .metric-value{font-size:18px}
+}
+</style>
 </head>
 
 <body>
-<div class="app">
+<aside class="sidebar">
+  <div class="brand">
+    <div class="brand-icon">⌁</div>
+    <div>
+      <div class="brand-name">SOL RADAR AI</div>
+      <div class="brand-sub">WALLET INTELLIGENCE</div>
+    </div>
+  </div>
 
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-icon">⌁</div>
+  <div class="nav-label">WORKSPACE</div>
+  <nav class="nav">
+    <button class="active" data-target="overview">◫ Overview</button>
+    <button data-target="scanner">⌕ Wallet Scanner</button>
+    <button data-target="flows">⇄ SOL Flows</button>
+    <button data-target="activity">▤ Transactions</button>
+    <button data-target="connections">⌘ Wallet Connections</button>
+  </nav>
+
+  <div class="nav-label">INTELLIGENCE</div>
+  <nav class="nav">
+    <button data-target="activity-types">◈ Activity Types</button>
+    <button data-target="creator-fees">◇ Creator Fees</button>
+  </nav>
+
+  <div class="sidebar-bottom">
+    <div class="status-card">
+      <div class="status-line"><span class="dot"></span> Scanner ready</div>
+      <div class="status-note">Read-only Solana analysis</div>
+    </div>
+  </div>
+</aside>
+
+<main class="main">
+  <header class="topbar" id="overview">
+    <div>
+      <div class="eyebrow">SOLANA NETWORK / INTELLIGENCE</div>
+      <h1>Command Centre</h1>
+      <div class="subtitle">Monitor public wallet activity with SOL RADAR AI.</div>
+    </div>
+    <div class="network"><span></span> MAINNET</div>
+  </header>
+
+  <section class="panel" id="scanner">
+    <div class="panel-heading">
       <div>
-        <div class="brand-name">SOL RADAR AI</div>
-        <div class="brand-sub">WALLET INTELLIGENCE</div>
+        <div class="panel-title">⌕ Wallet Scanner</div>
+        <div class="panel-description">Inspect recent activity for any public Solana wallet.</div>
       </div>
+      <span class="pill">READ ONLY</span>
     </div>
 
-    <div class="nav-label">WORKSPACE</div>
-    <nav class="nav">
-      <button class="active" data-target="overview"><span class="nav-icon">◫</span> Overview</button>
-      <button data-target="scanner"><span class="nav-icon">⌕</span> Wallet Scanner</button>
-      <button data-target="flows"><span class="nav-icon">⇄</span> SOL Flows</button>
-      <button data-target="activity"><span class="nav-icon">▤</span> Transactions</button>
-    </nav>
-
-    <div class="nav-label">INTELLIGENCE</div>
-    <nav class="nav">
-      <button data-target="activity-types"><span class="nav-icon">◈</span> Activity Types</button>
-      <button data-target="creator-fees"><span class="nav-icon">◇</span> Creator Fees</button>
-    </nav>
-
-    <div class="sidebar-bottom">
-      <div class="status-card">
-        <div class="status-line"><span class="dot"></span> Scanner ready</div>
-        <div class="status-note">Read-only Solana analysis</div>
+    <form id="scanForm">
+      <div class="scanner-grid">
+        <input id="walletAddress" placeholder="Paste Solana public wallet address..." autocomplete="off" spellcheck="false" required>
+        <select id="limit">
+          <option value="25">25 results</option>
+          <option value="50">50 results</option>
+          <option value="100" selected>100 results</option>
+        </select>
+        <button class="primary" id="scanButton" type="submit">⌕ SCAN WALLET</button>
       </div>
-    </div>
-  </aside>
+    </form>
 
-  <main class="main">
+    <div class="scan-hint">Only public blockchain data is inspected. Never enter a seed phrase or private key.</div>
+    <div id="message" class="message" role="status"></div>
+    <div id="walletInfo" class="wallet-info">SCANNED WALLET: <strong id="walletLabel"></strong></div>
+  </section>
 
-    <header class="topbar" id="overview">
-      <div>
-        <div class="eyebrow">SOLANA NETWORK / INTELLIGENCE</div>
-        <h1>Command Centre</h1>
-        <div class="subtitle">Monitor public wallet activity with SOL RADAR AI.</div>
-      </div>
-      <div class="network"><span></span> MAINNET</div>
-    </header>
+  <section class="metrics">
+    <div class="metric"><div class="metric-label">TRANSACTIONS SCANNED</div><div class="metric-value teal" id="totalTransactions">—</div><div class="metric-foot">Recent transaction history</div></div>
+    <div class="metric"><div class="metric-label">INCOMING SOL</div><div class="metric-value" id="incomingSOL">—</div><div class="metric-foot">Observed incoming transfers</div></div>
+    <div class="metric"><div class="metric-label">OUTGOING SOL</div><div class="metric-value" id="outgoingSOL">—</div><div class="metric-foot">Observed outgoing transfers</div></div>
+    <div class="metric"><div class="metric-label">NET SOL TRANSFERS</div><div class="metric-value" id="netSOL">—</div><div class="metric-foot">Incoming minus outgoing</div></div>
+    <div class="metric"><div class="metric-label">TOKEN TRANSACTIONS</div><div class="metric-value blue" id="tokenTransactions">—</div><div class="metric-foot">Transactions with token transfers</div></div>
+    <div class="metric"><div class="metric-label">FAILED TRANSACTIONS</div><div class="metric-value red" id="failedTransactions">—</div><div class="metric-foot">Failed scanned transactions</div></div>
+    <div class="metric"><div class="metric-label">CREATOR FEE COLLECTIONS</div><div class="metric-value teal" id="creatorCollections">—</div><div class="metric-foot">Instruction text matches</div></div>
+    <div class="metric"><div class="metric-label">CREATOR FEE SWEEPS</div><div class="metric-value yellow" id="creatorSweeps">—</div><div class="metric-foot">Instruction text matches</div></div>
+  </section>
 
-    <section class="panel section" id="scanner">
+  <section class="two-columns">
+    <div class="panel" id="flows">
       <div class="panel-heading">
-        <div>
-          <div class="panel-title">⌕ Wallet Scanner</div>
-          <div class="panel-description">Enter any public Solana wallet address to inspect its recent activity.</div>
-        </div>
-        <span class="pill">READ ONLY</span>
+        <div><div class="panel-title">⇄ SOL Flow Analysis</div><div class="panel-description">Transfer totals in the scanned transactions.</div></div>
       </div>
-
-      <form id="scanForm">
-        <div class="scanner-grid">
-          <input
-            id="walletAddress"
-            type="text"
-            placeholder="Paste Solana public wallet address..."
-            autocomplete="off"
-            spellcheck="false"
-            required
-          >
-          <select id="limit">
-            <option value="25">25 results</option>
-            <option value="50">50 results</option>
-            <option value="100" selected>100 results</option>
-          </select>
-          <button class="primary" id="scanButton" type="submit">⌕ SCAN WALLET</button>
-        </div>
-      </form>
-
-      <div class="scan-hint">Only public blockchain data is inspected. Never enter a seed phrase or private key.</div>
-      <div id="message" class="message" role="status"></div>
-      <div id="walletInfo" class="wallet-info">
-        <span>SCANNED WALLET:</span>
-        <strong id="walletLabel"></strong>
-      </div>
-    </section>
-
-    <section class="metrics" aria-label="Wallet metrics">
-      <div class="metric">
-        <div class="metric-label">TRANSACTIONS SCANNED</div>
-        <div class="metric-value teal" id="totalTransactions">—</div>
-        <div class="metric-foot">Recent transaction history</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">INCOMING SOL</div>
-        <div class="metric-value" id="incomingSOL">—</div>
-        <div class="metric-foot">Observed incoming transfers</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">OUTGOING SOL</div>
-        <div class="metric-value" id="outgoingSOL">—</div>
-        <div class="metric-foot">Observed outgoing transfers</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">NET SOL TRANSFERS</div>
-        <div class="metric-value" id="netSOL">—</div>
-        <div class="metric-foot">Incoming minus outgoing</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">TOKEN TRANSACTIONS</div>
-        <div class="metric-value blue" id="tokenTransactions">—</div>
-        <div class="metric-foot">Transactions with token transfers</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">FAILED TRANSACTIONS</div>
-        <div class="metric-value red" id="failedTransactions">—</div>
-        <div class="metric-foot">Failed transactions in scanned results</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">CREATOR FEE COLLECTIONS</div>
-        <div class="metric-value teal" id="creatorCollections">—</div>
-        <div class="metric-foot">Instruction text matches</div>
-      </div>
-      <div class="metric">
-        <div class="metric-label">CREATOR FEE SWEEPS</div>
-        <div class="metric-value yellow" id="creatorSweeps">—</div>
-        <div class="metric-foot">Instruction text matches</div>
-      </div>
-    </section>
-
-    <section class="two-columns">
-      <div class="panel section" id="flows">
-        <div class="panel-heading">
-          <div>
-            <div class="panel-title">⇄ SOL Flow Analysis</div>
-            <div class="panel-description">Transfer totals found in the scanned transactions.</div>
-          </div>
-        </div>
-        <div class="activity-list">
-          <div class="activity-row">
-            <span class="activity-name">Incoming transfers</span>
-            <strong class="activity-count" id="flowIncoming">—</strong>
-          </div>
-          <div class="activity-row">
-            <span class="activity-name">Outgoing transfers</span>
-            <strong class="activity-count" id="flowOutgoing">—</strong>
-          </div>
-          <div class="activity-row">
-            <span class="activity-name">Net transfer difference</span>
-            <strong class="activity-count" id="flowNet">—</strong>
-          </div>
-        </div>
-        <div class="scan-hint">These are observed transfer totals, not trading profit, portfolio value, or PnL.</div>
-      </div>
-
-      <div class="panel section" id="activity-types">
-        <div class="panel-heading">
-          <div>
-            <div class="panel-title">◈ Activity Breakdown</div>
-            <div class="panel-description">Transaction types returned by Helius.</div>
-          </div>
-        </div>
-        <div class="activity-list" id="activityBreakdown">
-          <div class="empty">Scan a wallet to see activity types.</div>
-        </div>
-      </div>
-    </section>
-
-    <section class="panel section" id="creator-fees">
-      <div class="panel-heading">
-        <div>
-          <div class="panel-title">◇ Creator Fee Intelligence</div>
-          <div class="panel-description">Preliminary instruction-text matching in scanned transactions.</div>
-        </div>
-      </div>
-      <div class="activity-list">
-        <div class="activity-row">
-          <span class="activity-name">Creator fee collection matches</span>
-          <strong class="activity-count" id="feeCollectionDetail">—</strong>
-        </div>
-        <div class="activity-row">
-          <span class="activity-name">Creator fee sweep matches</span>
-          <strong class="activity-count" id="feeSweepDetail">—</strong>
-        </div>
-      </div>
-      <div class="scan-hint">Matches are indicators, not proof of income or ownership. Verify individual instructions on a Solana explorer.</div>
-    </section>
-
-    <section class="panel section" id="activity">
-      <div class="panel-heading">
-        <div>
-          <div class="panel-title">▤ Recent Transactions</div>
-          <div class="panel-description">Latest transactions returned by your Helius scan.</div>
-        </div>
-        <span class="pill" id="tableCount">0 RESULTS</span>
-      </div>
-
-      <div class="table-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>TRANSACTION</th>
-              <th>TYPE</th>
-              <th>DATE</th>
-              <th>STATUS</th>
-              <th>EXPLORER</th>
-            </tr>
-          </thead>
-          <tbody id="transactionRows">
-            <tr>
-              <td colspan="5">
-                <div class="empty">
-                  <div class="empty-icon">⌁</div>
-                  No wallet scanned yet. Enter a public wallet address above to begin.
-                </div>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-
-    <div class="footer">
-      SOL RADAR AI · READ-ONLY WALLET INTELLIGENCE · POWERED BY HELIUS
+      <div class="activity-row"><span class="activity-name">Incoming transfers</span><strong class="activity-count" id="flowIncoming">—</strong></div>
+      <div class="activity-row"><span class="activity-name">Outgoing transfers</span><strong class="activity-count" id="flowOutgoing">—</strong></div>
+      <div class="activity-row"><span class="activity-name">Net transfer difference</span><strong class="activity-count" id="flowNet">—</strong></div>
+      <div class="scan-hint">Transfer totals are not trading profit or wallet PnL.</div>
     </div>
 
-  </main>
-</div>
+    <div class="panel" id="activity-types">
+      <div class="panel-heading">
+        <div><div class="panel-title">◈ Activity Breakdown</div><div class="panel-description">Transaction types returned by Helius.</div></div>
+      </div>
+      <div id="activityBreakdown"><div class="empty">Scan a wallet to see activity types.</div></div>
+    </div>
+  </section>
+
+  <section class="panel" id="creator-fees">
+    <div class="panel-heading">
+      <div><div class="panel-title">◇ Creator Fee Intelligence</div><div class="panel-description">Preliminary instruction-text matching in scanned transactions.</div></div>
+    </div>
+    <div class="activity-row"><span class="activity-name">Creator fee collection matches</span><strong class="activity-count" id="feeCollectionDetail">—</strong></div>
+    <div class="activity-row"><span class="activity-name">Creator fee sweep matches</span><strong class="activity-count" id="feeSweepDetail">—</strong></div>
+    <div class="scan-hint">These matches are indicators, not proof of income or ownership. Verify transactions on a Solana explorer.</div>
+  </section>
+
+  <section class="panel" id="connections">
+    <div class="panel-heading">
+      <div><div class="panel-title">⌘ Wallet Connections</div><div class="panel-description">Other public wallets interacting with the scanned address in the returned transaction history.</div></div>
+      <span class="pill" id="connectionCount">0 WALLETS</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>CONNECTED WALLET</th><th>ROLE</th><th>INTERACTIONS</th><th>SOL TRANSFERRED</th><th>EXPLORER</th></tr></thead>
+        <tbody id="connectionRows"><tr><td colspan="5"><div class="empty">Scan a wallet to discover connections.</div></td></tr></tbody>
+      </table>
+    </div>
+    <div class="scan-hint">Connections are discovered only from the transactions returned by this scan. They do not establish common ownership or prove a relationship.</div>
+  </section>
+
+  <section class="panel" id="activity">
+    <div class="panel-heading">
+      <div><div class="panel-title">▤ Recent Transactions</div><div class="panel-description">Latest transactions returned by your Helius scan.</div></div>
+      <span class="pill" id="tableCount">0 RESULTS</span>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>TRANSACTION</th><th>TYPE</th><th>DATE</th><th>STATUS</th><th>EXPLORER</th></tr></thead>
+        <tbody id="transactionRows"><tr><td colspan="5"><div class="empty">No wallet scanned yet.</div></td></tr></tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer">SOL RADAR AI · READ-ONLY WALLET INTELLIGENCE · POWERED BY HELIUS</div>
+</main>
 
 <script>
-  const $ = (id) => document.getElementById(id);
+const $ = id => document.getElementById(id);
 
-  let lastTransactions = [];
+function escapeHTML(value) {
+  return String(value ?? "").replace(/[&<>"']/g, char => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"
+  })[char]);
+}
 
-  function formatSOL(value) {
-    const number = Number(value);
-    if (!Number.isFinite(number)) return "0 SOL";
-    return number.toLocaleString(undefined, {
-      maximumFractionDigits: 6
-    }) + " SOL";
-  }
+function shortAddress(value) {
+  if (!value) return "Unknown";
+  return value.length > 18 ? value.slice(0,8)+"..."+value.slice(-6) : value;
+}
 
-  function shortAddress(value) {
-    if (!value) return "Unknown";
-    return value.length > 18
-      ? value.slice(0, 8) + "..." + value.slice(-6)
-      : value;
-  }
+function formatSOL(value) {
+  const n = Number(value);
+  return (Number.isFinite(n) ? n.toLocaleString(undefined,{maximumFractionDigits:6}) : "0") + " SOL";
+}
 
-  function setMessage(message, type) {
-    const box = $("message");
-    box.textContent = message;
-    box.className = "message " + type;
-  }
+function setMessage(message,type) {
+  $("message").textContent = message;
+  $("message").className = "message " + type;
+}
 
-  function resetMetrics() {
-    [
-      "totalTransactions", "incomingSOL", "outgoingSOL", "netSOL",
-      "tokenTransactions", "failedTransactions", "creatorCollections",
-      "creatorSweeps", "flowIncoming", "flowOutgoing", "flowNet",
-      "feeCollectionDetail", "feeSweepDetail"
-    ].forEach(id => $(id).textContent = "—");
-
-    $("activityBreakdown").innerHTML =
-      '<div class="empty">Scan a wallet to see activity types.</div>';
-
-    $("tableCount").textContent = "0 RESULTS";
-  }
-
-  function classifyCreatorActivity(tx) {
-    const text = JSON.stringify(tx).toLowerCase();
-
-    const collectionPatterns = [
+function classifyCreator(tx) {
+  const raw = JSON.stringify(tx).toLowerCase();
+  return {
+    collection: [
       "collect_coin_creator_fee",
       "collect_creator_fee_v2",
       "collect_creator_fee"
-    ];
+    ].some(x => raw.includes(x)),
+    sweep: raw.includes("sweep_creator_fee")
+  };
+}
 
-    const sweepPatterns = [
-      "sweep_creator_fee"
-    ];
-
-    return {
-      collection: collectionPatterns.some(pattern => text.includes(pattern)),
-      sweep: sweepPatterns.some(pattern => text.includes(pattern))
-    };
-  }
-
-  function calculateTransfers(transactions, wallet) {
-    let incoming = 0;
-    let outgoing = 0;
-
-    for (const tx of transactions) {
-      const transfers = Array.isArray(tx.nativeTransfers)
-        ? tx.nativeTransfers
-        : [];
-
-      for (const transfer of transfers) {
-        const amount = Number(transfer.amount || 0) / 1e9;
-
-        if (transfer.toUserAccount === wallet) incoming += amount;
-        if (transfer.fromUserAccount === wallet) outgoing += amount;
-      }
+function calculateTransfers(transactions,wallet) {
+  let incoming = 0, outgoing = 0;
+  for (const tx of transactions) {
+    for (const t of (Array.isArray(tx.nativeTransfers) ? tx.nativeTransfers : [])) {
+      const amount = Number(t.amount || 0) / 1e9;
+      if (t.toUserAccount === wallet) incoming += amount;
+      if (t.fromUserAccount === wallet) outgoing += amount;
     }
-
-    return { incoming, outgoing, net: incoming - outgoing };
   }
+  return {incoming,outgoing,net:incoming-outgoing};
+}
 
-  function renderBreakdown(types) {
-    const entries = Object.entries(types || {})
-      .sort((a, b) => b[1] - a[1])
-      .slice(0, 10);
+/* Discover counterparties from native SOL transfers.
+   Interaction totals count observed transfer records, not unique transactions. */
+function discoverConnections(transactions,wallet) {
+  const map = new Map();
 
-    if (!entries.length) {
-      $("activityBreakdown").innerHTML =
-        '<div class="empty">No activity types were returned.</div>';
-      return;
-    }
-
-    $("activityBreakdown").innerHTML = entries.map(([name, count]) => `
-      <div class="activity-row">
-        <span class="activity-name">${escapeHTML(name)}</span>
-        <strong class="activity-count">${Number(count)}</strong>
-      </div>
-    `).join("");
-  }
-
-  function escapeHTML(value) {
-    return String(value).replace(/[&<>"']/g, char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#039;"
-    })[char]);
-  }
-
-  function renderTransactions(transactions) {
-    const body = $("transactionRows");
-    $("tableCount").textContent = transactions.length + " RESULTS";
-
-    if (!transactions.length) {
-      body.innerHTML = `
-        <tr><td colspan="5">
-          <div class="empty">No transactions found for this wallet.</div>
-        </td></tr>`;
-      return;
-    }
-
-    body.innerHTML = transactions.map(tx => {
-      const signature = String(tx.signature || "");
-      const type = tx.type || "UNKNOWN";
-      const timestamp = tx.timestamp
-        ? new Date(Number(tx.timestamp) * 1000).toLocaleString()
-        : "Unknown date";
-      const failed = Boolean(tx.transactionError);
-      const status = failed ? "Failed" : "Success";
-      const url = "https://solscan.io/tx/" + encodeURIComponent(signature);
-
-      return `
-        <tr>
-          <td title="${escapeHTML(signature)}">
-            ${escapeHTML(shortAddress(signature))}
-          </td>
-          <td>${escapeHTML(type)}</td>
-          <td>${escapeHTML(timestamp)}</td>
-          <td><span class="pill ${failed ? "failed" : ""}">${status}</span></td>
-          <td>
-            ${signature
-              ? `<a class="signature" href="${url}" target="_blank" rel="noopener noreferrer">View ↗</a>`
-              : "—"}
-          </td>
-        </tr>
-      `;
-    }).join("");
-  }
-
-  function updateDashboard(result, wallet) {
-    const transactions = Array.isArray(result.transactions)
-      ? result.transactions
-      : [];
-
-    lastTransactions = transactions;
-
-    const intelligence = result.intelligence || {};
-    const transfers = calculateTransfers(transactions, wallet);
-
-    const incoming = Number.isFinite(Number(intelligence.incomingSOL))
-      ? Number(intelligence.incomingSOL)
-      : transfers.incoming;
-
-    const outgoing = Number.isFinite(Number(intelligence.outgoingSOL))
-      ? Number(intelligence.outgoingSOL)
-      : transfers.outgoing;
-
-    const net = incoming - outgoing;
-
-    const tokenCount = Number.isFinite(Number(intelligence.tokenTransactions))
-      ? Number(intelligence.tokenTransactions)
-      : transactions.filter(tx =>
-          Array.isArray(tx.tokenTransfers) && tx.tokenTransfers.length > 0
-        ).length;
-
-    const failedCount = Number.isFinite(Number(intelligence.failedTransactions))
-      ? Number(intelligence.failedTransactions)
-      : transactions.filter(tx => Boolean(tx.transactionError)).length;
-
-    const activityTypes = intelligence.activityTypes || {};
-    const fallbackTypes = {};
-
-    if (!Object.keys(activityTypes).length) {
-      transactions.forEach(tx => {
-        const type = tx.type || "UNKNOWN";
-        fallbackTypes[type] = (fallbackTypes[type] || 0) + 1;
+  function getEntry(address) {
+    if (!address || address === wallet) return null;
+    if (!map.has(address)) {
+      map.set(address,{
+        address,
+        sent:0,
+        received:0,
+        sol:0,
+        interactions:0,
+        tokenInteractions:0
       });
     }
-
-    let collections = 0;
-    let sweeps = 0;
-
-    for (const tx of transactions) {
-      const classification = classifyCreatorActivity(tx);
-      if (classification.collection) collections++;
-      if (classification.sweep) sweeps++;
-    }
-
-    $("totalTransactions").textContent =
-      Number(intelligence.transactionsScanned ?? transactions.length).toLocaleString();
-
-    $("incomingSOL").textContent = formatSOL(incoming);
-    $("outgoingSOL").textContent = formatSOL(outgoing);
-    $("netSOL").textContent = formatSOL(net);
-    $("netSOL").className = "metric-value " + (net >= 0 ? "teal" : "red");
-
-    $("tokenTransactions").textContent = tokenCount.toLocaleString();
-    $("failedTransactions").textContent = failedCount.toLocaleString();
-    $("creatorCollections").textContent = collections.toLocaleString();
-    $("creatorSweeps").textContent = sweeps.toLocaleString();
-
-    $("flowIncoming").textContent = formatSOL(incoming);
-    $("flowOutgoing").textContent = formatSOL(outgoing);
-    $("flowNet").textContent = formatSOL(net);
-    $("feeCollectionDetail").textContent = collections;
-    $("feeSweepDetail").textContent = sweeps;
-
-    renderBreakdown(
-      Object.keys(activityTypes).length ? activityTypes : fallbackTypes
-    );
-
-    renderTransactions(transactions);
-
-    $("walletLabel").textContent = wallet;
-    $("walletInfo").style.display = "flex";
+    return map.get(address);
   }
 
-  $("scanForm").addEventListener("submit", async (event) => {
-    event.preventDefault();
+  for (const tx of transactions) {
+    for (const t of (Array.isArray(tx.nativeTransfers) ? tx.nativeTransfers : [])) {
+      const amount = Number(t.amount || 0) / 1e9;
 
-    const wallet = $("walletAddress").value.trim();
-    const limit = Number($("limit").value);
-    const button = $("scanButton");
+      if (t.fromUserAccount === wallet) {
+        const other = getEntry(t.toUserAccount);
+        if (other) {
+          other.sent += amount;
+          other.sol += amount;
+          other.interactions++;
+        }
+      }
 
-    if (!wallet) {
-      setMessage("Please enter a public Solana wallet address.", "error");
-      return;
+      if (t.toUserAccount === wallet) {
+        const other = getEntry(t.fromUserAccount);
+        if (other) {
+          other.received += amount;
+          other.sol += amount;
+          other.interactions++;
+        }
+      }
     }
 
-    button.disabled = true;
-    button.textContent = "SCANNING...";
-    $("message").className = "message";
-    $("walletInfo").style.display = "none";
-    resetMetrics();
-
-    $("transactionRows").innerHTML = `
-      <tr><td colspan="5"><div class="empty">Scanning wallet transactions...</div></td></tr>
-    `;
-
-    try {
-      const response = await fetch("/api/scan", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ address: wallet, limit })
-      });
-
-      const result = await response.json().catch(() => ({}));
-
-      if (!response.ok) {
-        throw new Error(result.error || "Wallet scan failed.");
+    for (const t of (Array.isArray(tx.tokenTransfers) ? tx.tokenTransfers : [])) {
+      if (t.fromUserAccount === wallet) {
+        const other = getEntry(t.toUserAccount);
+        if (other) {
+          other.tokenInteractions++;
+          other.interactions++;
+        }
       }
-
-      if (!Array.isArray(result.transactions)) {
-        throw new Error("The scanner returned an unexpected response.");
+      if (t.toUserAccount === wallet) {
+        const other = getEntry(t.fromUserAccount);
+        if (other) {
+          other.tokenInteractions++;
+          other.interactions++;
+        }
       }
-
-      updateDashboard(result, wallet);
-      setMessage(
-        "Wallet scan completed. " + result.transactions.length +
-        " transactions received.",
-        "success"
-      );
-
-    } catch (error) {
-      setMessage(error.message || "Unable to scan wallet.", "error");
-      $("transactionRows").innerHTML = `
-        <tr><td colspan="5"><div class="empty">Scan failed. Check the message above and try again.</div></td></tr>
-      `;
-    } finally {
-      button.disabled = false;
-      button.textContent = "⌕ SCAN WALLET";
     }
-  });
+  }
 
-  document.querySelectorAll(".nav button").forEach(button => {
-    button.addEventListener("click", () => {
-      document.querySelectorAll(".nav button").forEach(item =>
-        item.classList.remove("active")
-      );
+  return [...map.values()].sort((a,b) =>
+    b.interactions - a.interactions || b.sol - a.sol
+  );
+}
 
-      button.classList.add("active");
+function renderConnections(connections) {
+  $("connectionCount").textContent = connections.length + " WALLETS";
 
-      const target = document.getElementById(button.dataset.target);
-      if (target) {
-        target.scrollIntoView({ behavior: "smooth", block: "start" });
-      }
+  if (!connections.length) {
+    $("connectionRows").innerHTML =
+      '<tr><td colspan="5"><div class="empty">No other wallet addresses were found in the returned transfer records.</div></td></tr>';
+    return;
+  }
+
+  $("connectionRows").innerHTML = connections.slice(0,100).map(c => {
+    const role = c.sent > 0 && c.received > 0
+      ? "Both directions"
+      : c.sent > 0 ? "Sent to wallet" : "Received from wallet";
+
+    const link = "https://solscan.io/account/" + encodeURIComponent(c.address);
+
+    return `<tr>
+      <td title="${escapeHTML(c.address)}">${escapeHTML(shortAddress(c.address))}</td>
+      <td>${escapeHTML(role)}</td>
+      <td>${c.interactions}</td>
+      <td>${formatSOL(c.sol)}</td>
+      <td><a class="signature" href="${link}" target="_blank" rel="noopener noreferrer">View ↗</a></td>
+    </tr>`;
+  }).join("");
+}
+
+function renderBreakdown(types) {
+  const entries = Object.entries(types || {}).sort((a,b)=>b[1]-a[1]).slice(0,10);
+  $("activityBreakdown").innerHTML = entries.length
+    ? entries.map(([name,count]) => `<div class="activity-row"><span class="activity-name">${escapeHTML(name)}</span><strong class="activity-count">${Number(count)}</strong></div>`).join("")
+    : '<div class="empty">No activity types were returned.</div>';
+}
+
+function renderTransactions(transactions) {
+  $("tableCount").textContent = transactions.length + " RESULTS";
+
+  if (!transactions.length) {
+    $("transactionRows").innerHTML = '<tr><td colspan="5"><div class="empty">No transactions found.</div></td></tr>';
+    return;
+  }
+
+  $("transactionRows").innerHTML = transactions.map(tx => {
+    const sig = String(tx.signature || "");
+    const date = tx.timestamp
+      ? new Date(Number(tx.timestamp)*1000).toLocaleString()
+      : "Unknown date";
+    const failed = Boolean(tx.transactionError);
+    const link = "https://solscan.io/tx/" + encodeURIComponent(sig);
+
+    return `<tr>
+      <td title="${escapeHTML(sig)}">${escapeHTML(shortAddress(sig))}</td>
+      <td>${escapeHTML(tx.type || "UNKNOWN")}</td>
+      <td>${escapeHTML(date)}</td>
+      <td><span class="pill ${failed?"failed":""}">${failed?"Failed":"Success"}</span></td>
+      <td>${sig ? `<a class="signature" href="${link}" target="_blank" rel="noopener noreferrer">View ↗</a>` : "—"}</td>
+    </tr>`;
+  }).join("");
+}
+
+function updateDashboard(result,wallet) {
+  const txs = result.transactions;
+  const intelligence = result.intelligence || {};
+  const flows = calculateTransfers(txs,wallet);
+
+  const incoming = Number.isFinite(Number(intelligence.incomingSOL)) ? Number(intelligence.incomingSOL) : flows.incoming;
+  const outgoing = Number.isFinite(Number(intelligence.outgoingSOL)) ? Number(intelligence.outgoingSOL) : flows.outgoing;
+  const net = incoming - outgoing;
+
+  const tokens = Number.isFinite(Number(intelligence.tokenTransactions))
+    ? Number(intelligence.tokenTransactions)
+    : txs.filter(tx=>Array.isArray(tx.tokenTransfers)&&tx.tokenTransfers.length).length;
+
+  const failed = Number.isFinite(Number(intelligence.failedTransactions))
+    ? Number(intelligence.failedTransactions)
+    : txs.filter(tx=>Boolean(tx.transactionError)).length;
+
+  let collections = 0, sweeps = 0;
+  const types = {};
+
+  for (const tx of txs) {
+    const c = classifyCreator(tx);
+    if (c.collection) collections++;
+    if (c.sweep) sweeps++;
+    const type = tx.type || "UNKNOWN";
+    types[type] = (types[type] || 0) + 1;
+  }
+
+  $("totalTransactions").textContent = txs.length.toLocaleString();
+  $("incomingSOL").textContent = formatSOL(incoming);
+  $("outgoingSOL").textContent = formatSOL(outgoing);
+  $("netSOL").textContent = formatSOL(net);
+  $("netSOL").className = "metric-value " + (net>=0?"teal":"red");
+  $("tokenTransactions").textContent = tokens.toLocaleString();
+  $("failedTransactions").textContent = failed.toLocaleString();
+  $("creatorCollections").textContent = collections;
+  $("creatorSweeps").textContent = sweeps;
+
+  $("flowIncoming").textContent = formatSOL(incoming);
+  $("flowOutgoing").textContent = formatSOL(outgoing);
+  $("flowNet").textContent = formatSOL(net);
+  $("feeCollectionDetail").textContent = collections;
+  $("feeSweepDetail").textContent = sweeps;
+
+  renderBreakdown(intelligence.activityTypes || types);
+  renderTransactions(txs);
+  renderConnections(discoverConnections(txs,wallet));
+
+  $("walletLabel").textContent = wallet;
+  $("walletInfo").style.display = "block";
+}
+
+$("scanForm").addEventListener("submit",async event=>{
+  event.preventDefault();
+
+  const wallet = $("walletAddress").value.trim();
+  const limit = Number($("limit").value);
+  const button = $("scanButton");
+
+  if (!wallet) {
+    setMessage("Enter a public Solana wallet address.","error");
+    return;
+  }
+
+  button.disabled = true;
+  button.textContent = "SCANNING...";
+  $("message").className = "message";
+  $("walletInfo").style.display = "none";
+
+  $("transactionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Scanning wallet...</div></td></tr>';
+  $("connectionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Discovering wallet connections...</div></td></tr>';
+
+  try {
+    const response = await fetch("/api/scan",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({address:wallet,limit})
+    });
+
+    const result = await response.json().catch(()=>({}));
+
+    if (!response.ok) throw new Error(result.error || "Wallet scan failed.");
+    if (!Array.isArray(result.transactions)) throw new Error("Unexpected response from Helius.");
+
+    updateDashboard(result,wallet);
+    setMessage("Scan completed. "+result.transactions.length+" transactions received.","success");
+
+  } catch(error) {
+    setMessage(error.message || "Unable to scan wallet.","error");
+    $("transactionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Scan failed. Check the error above.</div></td></tr>';
+    $("connectionRows").innerHTML = '<tr><td colspan="5"><div class="empty">Connections unavailable until a successful scan.</div></td></tr>';
+  } finally {
+    button.disabled = false;
+    button.textContent = "⌕ SCAN WALLET";
+  }
+});
+
+document.querySelectorAll(".nav button").forEach(button=>{
+  button.addEventListener("click",()=>{
+    document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
+    button.classList.add("active");
+    document.getElementById(button.dataset.target)?.scrollIntoView({
+      behavior:"smooth",block:"start"
     });
   });
+});
 </script>
 </body>
 </html>
